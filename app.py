@@ -27,7 +27,7 @@ device = torch.device('cpu')
 latent_dim = 100
 num_classes = 10
 G = Generator(latent_dim, num_classes).to(device)
-G.load_state_dict(torch.load('generator_mnist_improved.pth', map_location=device))
+G.load_state_dict(torch.load('generator_mnist.pth', map_location=device))
 G.eval()
 
 # ---- Function to generate images ----
