@@ -2,7 +2,6 @@ import streamlit as st
 import torch
 import torch.nn as nn
 import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image
 
 # ---- Model ----
@@ -31,26 +30,27 @@ G = Generator(latent_dim, num_classes).to(device)
 G.load_state_dict(torch.load('generator_mnist.pth', map_location=device))
 G.eval()
 
-# ---- Function to generate the images ----
+# ---- Function to generate images ----
 def generate_digit_images(digit, n_images=5):
     noise = torch.randn(n_images, latent_dim).to(device)
     labels = torch.full((n_images,), digit, dtype=torch.long).to(device)
     with torch.no_grad():
         imgs = G(noise, labels).cpu()
-    imgs = (imgs + 1) / 2 
+    imgs = (imgs + 1) / 2  # scale to [0,1]
     return imgs
 
 # ---- Streamlit App ----
-st.title("Gerador de Dígitos - MNIST GAN")
+st.title("Digit Generator - MNIST GAN")
 
-digit = st.selectbox("Escolha um dígito para gerar (0-9):", list(range(10)))
+digit = st.selectbox("Choose a digit to generate (0-9):", list(range(10)))
 
-if st.button("Gerar Imagens"):
-    st.write(f"Gerando 5 imagens do dígito: {digit}")
+if st.button("Generate Images"):
+    st.write(f"Generating 5 images of the digit: {digit}")
     imgs = generate_digit_images(digit)
-    
-    # Exibir as imagens
-    for i in range(len(imgs)):
+
+    # Display images side by side
+    cols = st.columns(len(imgs))
+    for i, col in enumerate(cols):
         img_np = imgs[i].squeeze().numpy()
         img_pil = Image.fromarray(np.uint8(img_np * 255), 'L')
-        st.image(img_pil, caption=f"Dígito {digit} - Imagem {i+1}", width=150)
+        col.image(img_pil, caption=f"Digit {digit} - Image {i+1}", width=150)
