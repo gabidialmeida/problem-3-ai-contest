@@ -41,11 +41,11 @@ G = Generator(latent_dim, num_classes).to(device)
 
 # Load the trained state_dict
 try:
-    G.load_state_dict(torch.load('generator_mnist_improved.pth', map_location=device))
+    G.load_state_dict(torch.load('generator_mnist_improved_1.pth', map_location=device))
     G.eval() # Set model to evaluation mode (important for BatchNorm and Dropout layers)
     st.success("Model loaded successfully!")
 except FileNotFoundError:
-    st.error("Error: 'generator_mnist_improved.pth' not found. Please ensure the model file is in the same directory.")
+    st.error("Error: 'generator_mnist_improved_1.pth' not found. Please ensure the model file is in the same directory.")
     st.stop() # Stop the app if the model isn't found
 except Exception as e:
     st.error(f"Error loading model: {e}")
